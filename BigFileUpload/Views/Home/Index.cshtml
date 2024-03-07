@@ -1,0 +1,54 @@
+﻿@model ICollection<IFormFile>
+@{
+    ViewData["Title"] = "Home Page";
+
+    string FormatFileSize(long fileSizeInBytes)
+    {
+        const int byteConversion = 1024;
+        double bytes = Convert.ToDouble(fileSizeInBytes);
+
+        if (fileSizeInBytes >= Math.Pow(byteConversion, 3)) // Size is greater than or equal to 1 GB
+        {
+            return $"{bytes / Math.Pow(byteConversion, 3):0.##} GB";
+        }
+        else if (fileSizeInBytes >= Math.Pow(byteConversion, 2)) // Size is greater than or equal to 1 MB
+        {
+            return $"{bytes / Math.Pow(byteConversion, 2):0.##} MB";
+        }
+        else if (fileSizeInBytes >= byteConversion) // Size is greater than or equal to 1 KB
+        {
+            return $"{bytes / byteConversion:0.##} KB";
+        }
+        else // Size is less than 1 KB
+        {
+            return $"{bytes} bytes";
+        }
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">대용량 파일 업로드 (최대 1GB까지)</h1>
+    
+    <form name="f" method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+
+            <div>
+                <input type="file" name="file1" class="form-control">
+            </div>
+
+            <div class="mt-3">
+                <button class="btn btn-primary" type="submit">Send</button>
+            </div>
+
+            @if (Model != null)
+            {
+                <div class="mt-3">
+                    파일명: @Model.ElementAt(0).FileName
+                    <br />
+                    파일크기: @FormatFileSize(Model.ElementAt(0).Length)
+                 </div>
+            }
+        </div>
+    </form>
+</div>
